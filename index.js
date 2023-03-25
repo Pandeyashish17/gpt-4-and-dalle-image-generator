@@ -52,7 +52,7 @@ bot.on("message", async (msg) => {
         // Send conversation history along with user's current message
         messages: [{
           "role": "system", "content": `this is an example prompt i got from the keyword "fish aquarium": "3D render of a cute tropical fish in an aquarium on a dark blue background, digital art" here is another example of "oil painting of a basketball player": "An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula". another example of "orange" : "A blue orange sliced in half laying on a blue floor in front of a blue wall". another example of "astronaut" : "A 3D render of an astronaut walking in a green desert" another example of "colored powdered" : "A centered explosion of colorful powder on a black background". another example of "formula car":"A Formula 1 car driving on a neon road
-" now i will give you some keywords and generate the prompt based on those keywords like those above example.`
+" now i will give you some keywords and generate the prompt based on those keywords like those above example. and just give the prompt nothing more like here is your prompt.. nothing. just prompt`
         }, ...chatHistory[chatId], { role: "system", content: " " }, { role: "user", content: userInput }],
       });
       const message = response["data"]["choices"][0]["message"]["content"]
