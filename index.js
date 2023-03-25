@@ -36,7 +36,7 @@ bot.on("message", async (msg) => {
     chatHistory[chatId] = [];
   }
 
-  // Store user message in chat history
+  // Store user message in chat history and if u dont want to store the user message, u can just remove the chathistory part
   chatHistory[chatId].push({
     role: "user",
     content: userInput,
@@ -46,22 +46,28 @@ bot.on("message", async (msg) => {
     bot.sendMessage(chatId, "Give some keywords like 'Girl road rain headphone crying' and chatgpt will generate the prompt for you and then Dall-e will generate the image using chatgpt prompt");
   } else {
     try {
+      bot.sendMessage(chatId, "Please wait, ChatGPT is thinking and generating your prompt");
       const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         // Send conversation history along with user's current message
         messages: [{
-          "role": "system", "content": `this is an example prompt i got from the keyword "Astronout walking on mars": "Astronaut walking on the red dusty surface of Mars, collecting samples of its soil, rocks, and atmosphere. With every step, they are discovering new and exciting things about this alien world." here is another example of "A dragon taking over the world": "Dragon, flying across the world. Its wings were so large that they cast a shadow over the land, blocking out the sun. Its fire was so powerful that it could turn entire cities to ash in a matter of moments." now i will give you some keywords and generate the prompt based on those keywords like those above example. now i will give you some keywords. and also keep the prompt like keywords based that will enhance the image and keep the keywords one short`
+          "role": "system", "content": `this is an example prompt i got from the keyword "fish aquarium": "3D render of a cute tropical fish in an aquarium on a dark blue background, digital art" here is another example of "oil painting of a basketball player": "An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula". another example of "orange" : "A blue orange sliced in half laying on a blue floor in front of a blue wall". another example of "astronaut" : "A 3D render of an astronaut walking in a green desert" another example of "colored powdered" : "A centered explosion of colorful powder on a black background". another example of "formula car":"A Formula 1 car driving on a neon road
+" now i will give you some keywords and generate the prompt based on those keywords like those above example.`
         }, ...chatHistory[chatId], { role: "system", content: " " }, { role: "user", content: userInput }],
       });
       const message = response["data"]["choices"][0]["message"]["content"]
-      bot.sendMessage(chatId, `this is the prompt chatgpt generated.${message}..  wait for some seconds to get your image`);
+      bot.sendMessage(chatId, `this is the prompt chatgpt generated.
+      
+      ${message}
+    
+      ..wait for some seconds to get your image`);
 
       // Store bot message in chat history
       chatHistory[chatId].push({
         role: "assistant",
         content: message,
       });
-
+      bot.sendMessage(chatId, "Now Wait, Dall-e is generating your image");
       const ImageResponse = await openai.createImage({
         prompt: message,
         n: 1,
@@ -72,7 +78,7 @@ bot.on("message", async (msg) => {
       bot.sendPhoto(chatId, image_url);
 
     } catch (error) {
-      bot.sendMessage(chatId, "Sorry, Some Error Happened");
+      bot.sendMessage(chatId, "Sorry, My money is finished, so u can just use the code and change the api key to yours and also telegram token  and it will work or maybe some other error happened");
     }
   }
 });
